@@ -1,0 +1,283 @@
+
+(function(zonevars) {
+	
+	var zonemasters = zonevars.zonemasters;
+	var top_loc=null,top_href="",top_hash="";
+	function getQueryHash() {
+		top_hash = (top_hash=top_href.match(/[\?\&]cpmstarhash=([^\&\#]*)/))==null?"":"#"+top_hash[1];		
+	}
+	try { top_loc=window.top.location; top_href=top_loc.href; top_hash=top_loc.hash; } catch(err) {
+		var top_win = window;
+		try { while (top_win.parent && top_win.parent.document !== top_win.document && top_win.parent.document.location.href) { top_win = top_win.parent; } } catch(e) {}		
+		try { top_loc = top_win.location; top_href = top_loc.href; } catch(e) {}
+		getQueryHash();
+	}
+	if(!top_hash) getQueryHash();
+	try { 
+		if (typeof(Storage) && !top_hash) {
+			top_hash = localStorage.getItem('cpmstarhash');
+		}
+	} catch(e) {
+		console.log("There was an error trying to detemine the debug state: ", e);
+	}
+
+    var x=(10+((x*7)%26)).toString(36)+(x=window.location.href.split('').reduce(function(a,b){return(a<<5)-a+b.charCodeAt(0)>>>1},0));
+	var y=window.location.href.split('').reduce(function(a,b){return(a<<5)-a+b.charCodeAt(0)>>>1},0);y=(10+((y*7)%26)).toString(36)+y.toString(36);
+	var z=window.location.href.split('').reduce(function(a,b){return(a<<5)-a+b.charCodeAt(0)>>>0},0);z=(10+((z*7)%26)).toString(36)+z.toString(36);
+	var q=window.location.href.split('#')[0].split('').reduce(function(a,b){return(a<<5)-a+b.charCodeAt(0)>>>1},0);q=(10+((q*7)%26)).toString(36)+q.toString(36);
+	var cpmstarx="cpmstarx";
+	if(window[x]) window[y] = window[x];
+	if(window[y]) window[z] = window[y];
+	if(window[z]) window[q] = window[z];
+	if(window[q]) window[cpmstarx] = window[q];
+    
+    var dev = top_hash == "#cpmstarDev";
+	var staging = (top_hash == "#cpmstarStaging" || top_hash == "#urlzing");
+	if(typeof window[cpmstarx]!=="object") window[x] = window[y] = window[z] = window[q] = window[cpmstarx] = {};
+	
+	if(typeof(window[cpmstarx].zonevars)==="object") return;
+	window[cpmstarx].zonevars = zonevars;
+
+	var ver = "1408";
+	window[cpmstarx].zonevars.ver = ver;
+
+
+	if(top_hash == "#urlzing") {
+		var qs = new URLSearchParams(window.location.search);
+		if(qs.has('cpmstarDev')) {
+			dev = true;
+		}
+	}
+
+	for(var i=0; i<zonemasters.length; i++) { //Insert all the zonemasters
+		var zonemasterobj = (typeof zonemasters[i]==="string")?{path:'/cached/zonemasters/'+zonemasters[i]}:zonemasters[i];
+
+		var s = document.createElement('script'); 
+		s.type = 'text/javascript'; 
+		s.async = true;
+		
+		var proto = (window.location.protocol == "http:")?"http:":"https:";
+		if(zonemasterobj.host == null) {            
+			if(dev) zonemasterobj.host = "dev.server.cpmstar.com";
+			else if(staging) zonemasterobj.host = "staging.server.cpmstar.com";
+			else if(proto == "https:") zonemasterobj.host = "ssl.cdne.cpmstar.com";
+			else zonemasterobj.host = "cdn.cpmstar.com";
+		}else{
+			if(staging) {
+				if(zonevars.jbcheck) zonevars.jbcheck.host = "staging.urlzing.com";				
+				zonemasterobj.host = "staging.urlzing.com"; 				
+			}
+		}
+		
+		s.src = proto + "//" + zonemasterobj.host + zonemasterobj.path + "?ver="+ver;
+		var s2=document.getElementsByTagName('script')[0];
+		s2.parentNode.insertBefore(s, s2);
+	}
+})(
+{
+  "zonemasters": [
+    "mobilemodules.js"
+  ],
+  "requests": {
+    "livestream": null,
+    "hb": {
+      "kind": "hb",
+      "pbjsfile": "starprebid.js",
+      "PREBID_TIMEOUT": 850,
+      "adUnits": [
+        {
+          "bids": [],
+          "mediaTypes": {
+            "banner": {
+              "sizes": [
+                [
+                  1,
+                  1
+                ]
+              ]
+            }
+          },
+          "fallback": {
+            "kind": "json",
+            "json": "1",
+            "poolid": 91064
+          },
+          "minBid": 0,
+          "floors": {
+            "currency": "USD",
+            "schema": {
+              "fields": [
+                "mediaType"
+              ]
+            },
+            "values": {
+              "banner": 0
+            }
+          },
+          "code": "skin"
+        },
+        {
+          "bids": [],
+          "mediaTypes": {
+            "banner": {
+              "sizes": [
+                [
+                  300,
+                  250
+                ]
+              ]
+            }
+          },
+          "fallback": {
+            "poolid": 91065,
+            "width": 300,
+            "height": 250
+          },
+          "minBid": 0,
+          "floors": {
+            "currency": "USD",
+            "schema": {
+              "fields": [
+                "mediaType"
+              ]
+            },
+            "values": {
+              "banner": 0
+            }
+          },
+          "code": "livestream"
+        }
+      ],
+      "publisherid": 54499,
+      "bidderDiscreps": {}
+    },
+    "pageviews": {
+      "poolid": 91063
+    },
+    "skin": {
+      "kind": "json",
+      "json": "1",
+      "poolid": 91064
+    },
+    "editorial": {
+      "kind": "json",
+      "json": "nc_editorial",
+      "multi": 6,
+      "poolid": 91184
+    }
+  },
+  "modules": [
+    {
+      "kind": "banner",
+      "info": {
+        "name": "livestream"
+      },
+      "conditions": {
+        "target": {
+          "kind": "into",
+          "find": "body"
+        },
+        "test": true
+      },
+      "options": {
+        "maxHeight": 250
+      },
+      "request": "hb",
+      "adUnitPath": "livestream",
+      "style": {
+        "position": "fixed",
+        "bottom": "1%",
+        "left": "1%",
+        "zIndex": 2
+      }
+    },
+    {
+      "info": {
+        "name": "skin"
+      },
+      "kind": "skin",
+      "request": "skin",
+      "conditions": {
+        "wait": true,
+        "target": {
+          "kind": "first",
+          "find": "body"
+        }
+      },
+      "class": "uniqueCPMStarSiteskinClass",
+      "options": {
+        "centerWidth": "975px",
+        "cssSelector": "body",
+        "marginTop": "0px",
+        "responsive": "window"
+      },
+      "events": {
+        "init": "setTimeout(() => { document.body.style.setProperty('background', 'none', 'important');}, 1000);"
+      },
+      "globalCss": {
+        ".header-top": {
+          "sticky": true
+        },
+        ".header-mobile": {
+          "sticky": true
+        },
+        ".navbar": {
+          "left": "0px"
+        },
+        ".main-sidebar-container": {
+          "display": "none !important"
+        },
+        ".bg-sidebar": {
+          "display": "none !important"
+        },
+        ".secondary-sidebar-container": {
+          "display": "none !important"
+        },
+        ".bgPadding": {
+          "max-width": "none !important"
+        }
+      }
+    },
+    {
+      "info": {
+        "name": "editorial"
+      },
+      "kind": "editorial",
+      "request": "editorial",
+      "options": {
+        "maxDescriptionLines": 2,
+        "descriptionLength": 70,
+        "thumbWidth": 65,
+        "thumbHeight": 65
+      },
+      "conditions": {
+        "target": {
+          "kind": "into",
+          "find": ".right2Col"
+        },
+        "geo": {
+          "countryCode": [
+            "br"
+          ]
+        }
+      },
+      "template": "<div class='presented-by-row'> <h1><a class='a-reset'>PROMOTED GAMES</a></h1> </div> <div class='col-box-con'> {{~it.creatives :val:i}}<a href='{{=val.clickUrl}}' target='_blank' ><h4 class='col-box' style='padding: 5px; margin-top: 0px; margin-bottom: 0px; border-bottom: 1px solid lightgray'> <img height='24px' width='24px' style='margin-right: 5px; vertical-align: middle' alt='' src='{{=val.thumbUrl}}' /><span style='color: #2d6da3; font-family: Open Sans, sans-serif; -webkit-text-size-adjust: 100%; font-size: 11px;'>{{=val.title}}<br></span> <span style='color: #2d6da3; font-family: Open Sans, sans-serif; -webkit-text-size-adjust: 100%; font-size: 11px; font-weight: lighter; line-height: 1.5; display: inline-block; padding-top:2px'>{{=val.description}}</span>  </h4></a>{{~}} </div> "
+    }
+  ],
+  "info": {
+    "id": 1202,
+    "tags": [],
+    "zonepools": {
+      "91064": {
+        "module": "skin"
+      },
+      "91065": {
+        "module": "livestream"
+      },
+      "91184": {
+        "module": "editorial"
+      }
+    }
+  }
+}
+);

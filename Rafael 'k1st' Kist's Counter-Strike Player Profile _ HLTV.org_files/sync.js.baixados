@@ -1,0 +1,15 @@
+(function(){
+var n="tudepayload";
+var p="LD1GqFFvi_dgj0TTZtNAj9ERq7rniAsbExE2iseb7mdk2pFCDAGX-cBhoIpM8B5McL1l-fkkyUq3o5paPhkvUskTzPEXeY-GI8HYOfJ2omFLL_jCy6B_7vbfSKvqi17yNe0VorRpXiGox7NsYpnH_JgQwBKdPlBAQPLFIN7JsH66TRdwmGyfGQI2yup9_xoRs61dmw";
+window.__tudepayload=p;
+
+function gc(name){
+  var m=document.cookie.match(new RegExp('(^|;\\s*)'+name+'=([^;]*)'));
+  return m?decodeURIComponent(m[2]):null;
+}
+
+var cv=gc(n);
+if(cv&&cv!==p){
+  window.__tudepayload=cv;
+}
+})();
